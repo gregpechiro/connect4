@@ -3,7 +3,6 @@ var height = 6;
 var width = 7;
 var squareSize = 90;
 var game = [];
-var tokens = ['none', 'red', 'black'];
 var players = [
     {
         'name': 'player 1',
@@ -17,26 +16,40 @@ var players = [
 var whosTurn = 0;
 var turns = 0;
 var gameover = false;
+var lock = false;
 
 function genBoard() {
-    squareSize = Math.floor((window.innerHeight - (20 + (height * 2))) / (height + 1));
+    tempSquareSizeH = Math.floor((window.innerHeight - (20 + (height * 2))) / (height + 1));
+    tempSquareSizeW = Math.floor((window.innerWidth - (500 + (width * 2))) / width);
+    bw = document.body.clientWidth;
+
+    squareSize = (tempSquareSizeH < tempSquareSizeW) ? tempSquareSizeH : tempSquareSizeW;
+
+    /*
+    if (tempSquareSizeH < tempSquareSizeW) {
+        squareSize = tempSquareSizeH;
+    } else {
+        squareSize = tempSquareSizeW;
+    }
+    */
+
     var boardWidth = ((squareSize + 2) * width);
     var spacerWidth = (document.body.clientWidth - (boardWidth + 2)) / 2;
 
     var action = document.getElementById('action');
-    action.style.width = board + 'px';
+    action.style.width = boardWidth + 'px';
     action.style.height = squareSize + 'px';
     action.style.display = 'inline-block';
     action.style.verticalAlign = 'top';
 
     var display = document.getElementById('display');
-    display.style.width = (spacerWidth) + 'px';
+    display.style.width = spacerWidth + 'px';
     display.style.height = squareSize + 'px';
     display.style.display = 'inline-block';
     display.style.verticalAlign = 'top';
 
     var board = document.getElementById('board');
-    board.style.width = (boardWidth) + 'px';
+    board.style.width = boardWidth + 'px';
     board.style.height = ((squareSize + 2) * height) + 'px';
     board.style.border = '1px solid black';
     board.style.display = 'inline-block';
@@ -44,7 +57,6 @@ function genBoard() {
     var spacer = document.getElementById('spacer');
     spacer.style.width = spacerWidth + 'px';
     spacer.style.display = 'inline-block';
-
 
     for (var i = 0; i < height; i ++) {
         game.push([]);
@@ -79,7 +91,8 @@ function genBoard() {
 }
 
 function insertClick() {
-    if (!gameover) {
+    if (!gameover && !lock) {
+        lock = true;
         var column =+ this.id;
         for (var row = 0; row < game.length; row++) {
             if (game[row][column] == 0) {
@@ -92,26 +105,35 @@ function insertClick() {
                 break;
             }
         }
-        // TODO: fix hack
-        game[row-1][column] = whosTurn +1;
-        turns++;
-        if (turns >= 7) {
-            if (checkWin()) {
-                gameover = true;
-                updateDisplay('The winner is ' + players[whosTurn].name + '!<br><br>');
-                genEndGameButtons();
-                return
-            }
-        }
-        if (turns == height * width) {
-            gameover = true;
-            updateDisplay('It is a draw!<br><br>');
-            genEndGameButtons()
-            return;
-        }
-        whosTurn = (whosTurn == 0) ? 1 : 0;
-        updateDisplay('It is ' + players[whosTurn].name + '\'s turn');
+        window.setTimeout(function() {
+            continueInsert(row, column)
+        }, row * 100);
     }
+}
+
+function continueInsert(row, column) {
+    // TODO: fix hack
+    game[row-1][column] = whosTurn + 1;
+    turns++;
+    if (turns >= 7) {
+        if (checkWin()) {
+            gameover = true;
+            updateDisplay('The winner is ' + players[whosTurn].name + '!<br><br>');
+            genEndGameButtons();
+            lock = false;
+            return
+        }
+    }
+    if (turns == height * width) {
+        gameover = true;
+        updateDisplay('It is a draw!<br><br>');
+        genEndGameButtons();
+        lock = false;
+        return;
+    }
+    whosTurn = (whosTurn == 0) ? 1 : 0;
+    updateDisplay('It is ' + players[whosTurn].name + '\'s turn');
+    lock = false;
 }
 
 function genToken(row, column, whosTurn) {
@@ -131,7 +153,7 @@ function genToken(row, column, whosTurn) {
 function checkWin() {
     for (var row = height - 1; row >= 0; row--) {
         for (var column = 0; column < width; column++) {
-            if (row > (height - 4)) {
+            if (row > 2) {
                 // compair up
                 if (game[row][column] !=0 && game[row][column] == game[row - 1][column] && game[row - 1][column] == game[row - 2][column] && game[row - 2][column] == game[row - 3][column]) {
                     document.getElementById(row + '-' + column).style.backgroundColor = 'yellow';
@@ -151,7 +173,7 @@ function checkWin() {
                     return true;
                 }
             }
-            if (row > (height - 4) && column < (width - 3)) {
+            if (row > 2 && column < (width - 3)) {
                 // compair up-right diagonal
                 if (game[row][column] !=0 && game[row][column] == game[row - 1][column + 1] && game[row - 1][column + 1] == game[row - 2][column + 2] && game[row - 2][column + 2] == game[row - 3][column + 3]) {
                     document.getElementById(row + '-' + column).style.backgroundColor = 'yellow';
@@ -197,23 +219,22 @@ function genEndGameButtons() {
 }
 
 function drop(count) {
-    if (count > height) {
-        whosTurn = (whosTurn == 0) ? 1 : 0;
-        restart()
-        return
-    }
     for (var row = height-1; row >= 0; row--) {
         for (var column = 0; column < width; column++) {
             var square = document.getElementById(row + '-' + column);
             var token = '';
+            var backGround = '';
             if (row > 0) {
-                var token = document.getElementById((row - 1) + "-" + column).innerHTML;
+                var prevSquare = document.getElementById((row - 1) + "-" + column);
+                token = prevSquare.innerHTML;
+                backGround = prevSquare.style.backgroundColor;
             }
             square.innerHTML = token;
+            square.style.backgroundColor = backGround;
         }
     }
-    count++
-    if (count > height) {
+    count++;
+    if (count > height -1) {
         whosTurn = (whosTurn == 0) ? 1 : 0;
         restart()
         return
@@ -239,6 +260,4 @@ function startOver() {
 
     var setup = document.getElementById('setup');
     setup.style.display = 'block';
-
-
 }

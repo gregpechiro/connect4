@@ -1,7 +1,6 @@
 
 var startButton = document.getElementById('startGame');
 startButton.onclick = function() {
-    console.log('clicked');
     startGame();
 }
 
@@ -18,6 +17,11 @@ function startGame() {
         error.innerText = 'All fields must be filled out';
         return
     }
+    if (player1Name == player2Name) {
+        error.innerText = 'Player names must be different';
+        return
+    }
+
     height =+ document.getElementById('height').value;
     if (height == '') {
         error.innerText = 'All fields must be filled out';
@@ -36,6 +40,15 @@ function startGame() {
         error.innerText = 'Minimum dimensions are 4 x 4';
         return
     }
+    if (width > 16) {
+        error.innerText = 'Maximum dimensions are 11 x 16';
+        return
+    }
+    if (height > 11) {
+        error.innerText = 'Maximum dimensions are 11 x 16';
+        return
+    }
+
     var player1Color = document.getElementById('p1Color').value;
     var player2Color = document.getElementById('p2Color').value;
     if (player1Color == player2Color) {
