@@ -5,11 +5,49 @@
         <title>Connect 4</title>
     </head>
     <body>
-        <div id="display" style="text-align:center;"></div>
-        <div id="action"></div>
-        <div id="spacer"></div>
-        <div id="board"></div>
+        <div id="game">
+            <div id="display" style="text-align:center;"></div>
+            <div id="action"></div>
+            <div id="spacer"></div>
+            <div id="board"></div>
+        </div>
+
+        <div id="setup" style="text-align: center;">
+            <span id="setupError" style="color: red;"></span>
+            <p>
+                <label>First Player</label><br>
+                <label>Name: </label>
+                <input type="text" id="p1Name" placeholder="Name">
+                <label> Color: </label>
+                <input type="color" id="p1Color">
+            </p>
+            <p>
+                <label>Second Player</label><br>
+                <label>Name: </label>
+                <input type="text" id="p2Name" placeholder="Name">
+                <label> Color: </label>
+                <input type="color" id="p2Color">
+            </p>
+            <p>
+                <label>Who Will Start?</label><br>
+                <label>Player 1: </label>
+                <input type="radio" id="whoStarts" name="whoStarts" value="0" checked>
+                <label>Player 2: </label>
+                <input type="radio" id="whoStarts" name="whoStarts" value="1">
+            </p>
+            <p>
+                <label>Board Size</label><br>
+                <label>Height:</label>
+                <input type="number" id="height" placeholder="Height" value="6" min="4">
+                <label>Width: </label>
+                <input type="number" id="width" placeholder="Width" value="7" min="4">
+            </p>
+            <p>
+                <button id="startGame">Start Game</button>
+            </p>
+        </div>
 
         <script src="static/js/connect4.js" charset="utf-8"></script>
+        <script src="static/js/setup.js" charset="utf-8"></script>
     </body>
 </html>

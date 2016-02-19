@@ -20,7 +20,6 @@ var gameover = false;
 
 function genBoard() {
     squareSize = Math.floor((window.innerHeight - (20 + (height * 2))) / (height + 1));
-    console.log(window.innerHeight - 20);
     var boardWidth = ((squareSize + 2) * width);
     var spacerWidth = (document.body.clientWidth - (boardWidth + 2)) / 2;
 
@@ -99,17 +98,19 @@ function insertClick() {
         if (turns >= 7) {
             if (checkWin()) {
                 gameover = true;
-                win();
+                updateDisplay('The winner is ' + players[whosTurn].name + '!<br><br>');
+                genEndGameButtons();
                 return
             }
         }
         if (turns == height * width) {
             gameover = true;
-            draw()
+            updateDisplay('It is a draw!<br><br>');
+            genEndGameButtons()
             return;
         }
         whosTurn = (whosTurn == 0) ? 1 : 0;
-        displayTurn();
+        updateDisplay('It is ' + players[whosTurn].name + '\'s turn');
     }
 }
 
@@ -130,31 +131,43 @@ function genToken(row, column, whosTurn) {
 function checkWin() {
     for (var row = height - 1; row >= 0; row--) {
         for (var column = 0; column < width; column++) {
-            // compair up
             if (row > (height - 4)) {
+                // compair up
                 if (game[row][column] !=0 && game[row][column] == game[row - 1][column] && game[row - 1][column] == game[row - 2][column] && game[row - 2][column] == game[row - 3][column]) {
-                    console.log('up');
+                    document.getElementById(row + '-' + column).style.backgroundColor = 'yellow';
+                    document.getElementById((row - 1) + '-' + column).style.backgroundColor = 'yellow';
+                    document.getElementById((row - 2) + '-' + column).style.backgroundColor = 'yellow';
+                    document.getElementById((row - 3) + '-' + column).style.backgroundColor = 'yellow';
                     return true;
                 }
             }
             if (column < (width - 3)) {
                 // compair right
                 if (game[row][column] !=0 && game[row][column] == game[row][column + 1] && game[row][column + 1] == game[row][column + 2] && game[row][column + 2] == game[row][column + 3]) {
-                    console.log('right');
+                    document.getElementById(row + '-' + column).style.backgroundColor = 'yellow';
+                    document.getElementById(row + '-' + (column + 1)).style.backgroundColor = 'yellow';
+                    document.getElementById(row + '-' + (column + 2)).style.backgroundColor = 'yellow';
+                    document.getElementById(row + '-' + (column + 3)).style.backgroundColor = 'yellow';
                     return true;
                 }
             }
             if (row > (height - 4) && column < (width - 3)) {
                 // compair up-right diagonal
                 if (game[row][column] !=0 && game[row][column] == game[row - 1][column + 1] && game[row - 1][column + 1] == game[row - 2][column + 2] && game[row - 2][column + 2] == game[row - 3][column + 3]) {
-                    console.log('up-right diag');
+                    document.getElementById(row + '-' + column).style.backgroundColor = 'yellow';
+                    document.getElementById((row - 1) + '-' + (column + 1)).style.backgroundColor = 'yellow';
+                    document.getElementById((row - 2) + '-' + (column + 2)).style.backgroundColor = 'yellow';
+                    document.getElementById((row - 3) + '-' + (column + 3)).style.backgroundColor = 'yellow';
                     return true;
                 }
             }
             if (row < (height - 3) && column < (width-3)) {
                 // compair down-right diagonal
                 if (game[row][column] !=0 && game[row][column] == game[row + 1][column + 1] && game[row + 1][column + 1] == game[row + 2][column + 2] && game[row + 2][column + 2] == game[row + 3][column + 3]) {
-                    console.log('down-right diag');
+                    document.getElementById(row + '-' + column).style.backgroundColor = 'yellow';
+                    document.getElementById((row + 1) + '-' + (column + 1)).style.backgroundColor = 'yellow';
+                    document.getElementById((row + 2) + '-' + (column + 2)).style.backgroundColor = 'yellow';
+                    document.getElementById((row + 3) + '-' + (column + 3)).style.backgroundColor = 'yellow';
                     return true;
                 }
             }
@@ -163,51 +176,29 @@ function checkWin() {
     return false;
 }
 
-function displayTurn() {
+function updateDisplay(message) {
     var display = document.getElementById('display');
     display.style.color = players[whosTurn].color;
-    display.innerText = 'It is ' + players[whosTurn].name + '\'s turn';
+    display.innerHTML = message;
 }
 
-function win() {
+function genEndGameButtons() {
     var display = document.getElementById('display');
-    display.style.color = players[whosTurn].color;
-    display.innerHTML = 'The winner is ' + players[whosTurn].name + '!<br><br>';
-    var restartButton = document.createElement('button');
-    restartButton.innerText = 'Restart';
-    restartButton.onclick = function() {
+    var rematchButton = document.createElement('button');
+    rematchButton.innerText = 'Rematch';
+    rematchButton.onclick = function() {
         drop(0);
     }
-    display.appendChild(restartButton);
-}
-
-function draw() {
-    var display = document.getElementById('display');
-    display.style.color = players[whosTurn].color;
-    display.innerHTML = 'It is a draw!<br><br>';
-    var restartButton = document.createElement('button');
-    restartButton.innerText = 'Restart';
-    restartButton.onclick = function() {
-        drop(0);
-    }
-    display.appendChild(restartButton);
-}
-
-function restart() {
-    whosTurn = (whosTurn == 0) ? 1 : 0;
-    game = [];
-    document.getElementById('action').innerHTML = '';
-    document.getElementById('board').innerHTML = '';
-    genBoard();
-    turns = 0;
-    gameover = false;
-    var display = document.getElementById('display');
-    display.style.color = players[whosTurn].color;
-    display.innerText = 'It is ' + players[whosTurn].name + '\'s turn';
+    display.appendChild(rematchButton);
+    var startOverButton = document.createElement('button');
+    startOverButton.innerText = 'Start Over';
+    startOverButton.onclick = startOver;
+    display.appendChild(startOverButton);
 }
 
 function drop(count) {
     if (count > height) {
+        whosTurn = (whosTurn == 0) ? 1 : 0;
         restart()
         return
     }
@@ -223,6 +214,7 @@ function drop(count) {
     }
     count++
     if (count > height) {
+        whosTurn = (whosTurn == 0) ? 1 : 0;
         restart()
         return
     }
@@ -231,5 +223,22 @@ function drop(count) {
     }, 150);
 }
 
-genBoard();
-displayTurn();
+function restart() {
+    game = [];
+    document.getElementById('action').innerHTML = '';
+    document.getElementById('board').innerHTML = '';
+    turns = 0;
+    gameover = false;
+    genBoard();
+    updateDisplay('It is ' + players[whosTurn].name + '\'s turn');
+}
+
+function startOver() {
+    var board = document.getElementById('game');
+    board.style.display = 'none';
+
+    var setup = document.getElementById('setup');
+    setup.style.display = 'block';
+
+
+}
