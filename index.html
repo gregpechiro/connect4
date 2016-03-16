@@ -6,33 +6,40 @@
     </head>
     <body>
         <div id="game">
-            <div id="display" style="text-align:center;"></div>
-            <div id="action"></div>
-            <div id="spacer"></div>
-            <div id="board"></div>
+            <div style="width:100%;">
+                <div id="display" style="text-align:center;"></div>
+                <div id="action"></div>
+            </div>
+            <div style="width:100%;">
+                <div id="spacer"></div>
+                <div id="board"></div>
+            </div>
         </div>
 
         <div id="setup" style="text-align: center;">
             <span id="setupError" style="color: red;"></span>
-            <p>
-                <label>First Player</label><br>
-                <label>Name: </label>
-                <input type="text" id="p1Name" placeholder="Name" value="Player 1">
-                <label> Color: </label>
-                <input type="color" id="p1Color" value="#ff0000">
-            </p>
-            <p>
-                <label>Second Player</label><br>
-                <label>Name: </label>
-                <input type="text" id="p2Name" placeholder="Name" value="Player 2">
-                <label> Color: </label>
-                <input type="color" id="p2Color">
-            </p>
-            <p>
+            <div id="players">
+                <p>
+                    <label>Player 1</label><br>
+                    <label>Name: </label>
+                    <input type="text" id="p1Name" placeholder="Name" value="Player 1">
+                    <label> Color: </label>
+                    <input type="color" id="p1Color" value="#ff0000">
+                </p>
+                <p>
+                    <label>Player 2</label><br>
+                    <label>Name: </label>
+                    <input type="text" id="p2Name" placeholder="Name" value="Player 2">
+                    <label> Color: </label>
+                    <input type="color" id="p2Color">
+                </p>
+            </div>
+            <button id="addPlayer">Add Player</button>
+            <p id="starts">
                 <label>Who Will Start?</label><br>
                 <label>Player 1: </label>
                 <input type="radio" id="whoStarts" name="whoStarts" value="0" checked>
-                <label>Player 2: </label>
+                <label> Player 2: </label>
                 <input type="radio" id="whoStarts" name="whoStarts" value="1">
             </p>
             <p>

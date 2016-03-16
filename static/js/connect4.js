@@ -12,16 +12,7 @@ var squareSize = 90;
 // it will become a 2d array
 var game = [];
 // this is the player setup containing the player name and token color
-var players = [
-    {
-        'name': 'player 1',
-        'color': 'red'
-    },
-    {
-        'name': 'player 2',
-        'color': 'black'
-    }
-];
+var players = [];
 // this is whos turn it currently is. it is the index of the player in the array above
 var whosTurn = 0;
 // thi isthe totalt nuber of turns in the game
@@ -203,7 +194,7 @@ function continueInsert(row, column) {
     turns++;
     // verfify the number of turns taken is greater than or equal to 7
     // (this is the minimum number of turns needed for a win)
-    if (turns >= 7) {
+    if (turns > (players.length * 3)) {
         // check for a win
         // see checkWin function
         if (checkWin()) {
@@ -235,7 +226,7 @@ function continueInsert(row, column) {
     }
     // at this point no one has won and there is no tie
     // switch whos turcn it is
-    whosTurn = (whosTurn == 0) ? 1 : 0;
+    setWhosTurn();
     // display whos turns it is
     updateDisplay('It is ' + players[whosTurn].name + '\'s turn');
     // unlock
@@ -438,7 +429,7 @@ function drop(count) {
     // check if the count is greater than the height -1
     if (count > height -1) {
         // switch the players turn
-        whosTurn = (whosTurn == 0) ? 1 : 0;
+        setWhosTurn();
         // restart the game see  restart function
         restart()
         // exit the fdrop function
@@ -483,4 +474,12 @@ function startOver() {
     var setup = document.getElementById('setup');
     // show the setup form by adding a display type
     setup.style.display = 'block';
+}
+
+function setWhosTurn() {
+    if (whosTurn == numPlayers - 1) {
+        whosTurn = 0;
+        return;
+    }
+    whosTurn++;
 }
