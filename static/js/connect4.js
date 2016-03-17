@@ -194,7 +194,7 @@ function continueInsert(row, column) {
     turns++;
     // verfify the number of turns taken is greater than or equal to 7
     // (this is the minimum number of turns needed for a win)
-    if (turns > (players.length * 3)) {
+    if (turns > (numPlayers * 3)) {
         // check for a win
         // see checkWin function
         if (checkWin()) {
@@ -474,6 +474,10 @@ function startOver() {
     var setup = document.getElementById('setup');
     // show the setup form by adding a display type
     setup.style.display = 'block';
+    players = [];
+    game = [];
+    turns = 0;
+    gameover = false;
 }
 
 function setWhosTurn() {
