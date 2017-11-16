@@ -136,8 +136,9 @@ function getColor() {
 }
 
 // this isthe start game function
-// it setups up the variables needed based on the user input
-// then triggers the game tostart
+// it validates all of the information needed to start a game
+// then setups up the variables needed based on the user input
+// then triggers the game to start
 function startGame() {
     // get the error div
     var error = document.getElementById('setupError');
@@ -169,37 +170,6 @@ function startGame() {
         error.innerText = 'Player colors must be different';
         return
     }
-
-
-
-
-
-    // get player 1 name from the input value
-    /*var player1Name = document.getElementById('p1Name').value;
-    // check if the player 1 name is empty
-    if (player1Name == '') {
-        // set the error for an empty input
-        error.innerText = 'All fields must be filled out';
-        // exit funciton
-        return
-    }
-    // get player 2 name from the input value
-    var player2Name = document.getElementById('p2Name').value;
-    // check if the player 2 name is empty
-    if (player2Name == '') {
-        // set the error for an empty input
-        error.innerText = 'All fields must be filled out';
-        // exit the function
-        return
-    }
-    // check if the player names are the same
-    if (player1Name == player2Name) {
-        // set the error for matching names
-        error.innerText = 'Player names must be different';
-        // exit the function
-        return
-    }*/
-
 
     // get the height of the board from the input
     // the `=+` is a little trick that will convert the string from the input
@@ -252,19 +222,6 @@ function startGame() {
         return
     }
 
-    /*
-    // get both players' colors from the inputs
-    var player1Color = document.getElementById('p1Color').value;
-    var player2Color = document.getElementById('p2Color').value;
-    // check if the colors are the same
-    if (player1Color == player2Color) {
-        // set the error for matching colors
-        error.innerText = 'Player colors must be different';
-        // exit the function
-        return
-    }*/
-
-
     // get the starting player radio buttons
     var starters = document.querySelectorAll('#whoStarts');
     // loop over list of players
@@ -285,14 +242,6 @@ function startGame() {
         player.color = colorInputs[i].value;
         players.push(player);
     }
-
-
-    /*
-    players[0].name = player1Name;
-    players[0].color = player1Color;
-    players[1].name = player2Name;
-    players[1].color = player2Color;
-    */
 
     // get the setup div
     var setup = document.getElementById('setup');
